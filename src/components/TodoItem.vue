@@ -1,4 +1,4 @@
 <script setup lang="ts"></script>
 <template>
-  <div></div>
+  <h1>TodoItem</h1>
 </template>

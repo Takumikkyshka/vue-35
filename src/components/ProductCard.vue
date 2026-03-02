@@ -7,13 +7,15 @@
     </div>
     <p>{{ product.inStock ? 'В наличии' : 'Будет позже' }}</p>
     <p>{{ product.description }}</p>
+    <button @click="cart!.push(product)" class="cursor-pointer">Купить</button>
     <RouterLink :to="`/products/${product.id}`">Подробнее</RouterLink>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Product } from '@/types/types'
-
+import { inject, type Ref } from 'vue'
+const cart = inject<Ref<Product[]>>('cart')
 // defineProps(['brand', 'title', 'rating', 'price'])
 
 // defineProps({

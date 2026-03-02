@@ -1,14 +1,9 @@
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import CounterItem from '../components/CounterItem.vue'
-import { type EditingInput, type Todo } from '../types/types'
-import TodoAdd from '@/components/TodoAdd.vue'
+import type { EditingInput, Todo } from '@/types/types'
+import { inject, type Ref, ref, watch } from 'vue'
+import TodoAdd from './TodoAdd.vue'
 
-onMounted(() => {
-  if (localStorage.getItem('todos')) {
-    todos.value = JSON.parse(localStorage.getItem('todos')!)
-  }
-})
+const todos2 = inject<Ref<Todo[]>>('todos2')
 
 const showModal = ref<boolean>(false)
 
@@ -17,45 +12,25 @@ const editingInput = ref<EditingInput>({
   text: '',
 })
 
-const todos = ref<Todo[]>([])
-
 watch(
-  () => todos.value,
+  () => todos2!.value,
   () => {
-    console.log(todos)
+    console.log(todos2)
 
-    localStorage.setItem('todos', JSON.stringify(todos.value))
+    localStorage.setItem('todos2', JSON.stringify(todos2!.value))
   },
   {
     deep: true,
   },
 )
 
-const showAdd = ref<boolean>(false)
-
-const text = ref<string>('')
-
-const newToDO = ref<string>('')
-
-function addTodo() {
-  // todos.value
-
-  todos.value.push({
-    id: Date.now(),
-    title: newToDO.value,
-    completed: false,
-  })
-
-  newToDO.value = ''
-}
-
-// todos.value.splice(3, 1)
+// todos2.value.splice(3, 1)
 
 function deleteToDO(id: number) {
-  const index = todos.value.findIndex((todo) => todo.id === id)
+  const index = todos2!.value.findIndex((todo) => todo.id === id)
 
   if (index !== -1) {
-    todos.value.splice(index, 1)
+    todos2!.value.splice(index, 1)
   } else {
     console.log('Элемента не существа')
   }
@@ -64,51 +39,31 @@ function deleteToDO(id: number) {
 function editToDo(id: number) {
   showModal.value = true
 
-  const index = todos.value.findIndex((todo) => todo.id === id)
+  const index = todos2!.value.findIndex((todo) => todo.id === id)
 
   if (index !== -1) {
-    editingInput.value.text = todos.value[index]!.title
+    editingInput.value.text = todos2!.value[index]!.title
     editingInput.value.id = id
   }
 }
 
 function saveToDO() {
-  const index = todos.value.findIndex((todo) => todo.id === editingInput.value.id)
+  const index = todos2!.value.findIndex((todo) => todo.id === editingInput.value.id)
 
-  todos.value[index]!.title = editingInput.value.text
+  todos2!.value[index]!.title = editingInput.value.text
 
   showModal.value = false
 }
 </script>
-
 <template>
-  <h1>Привет VUE!</h1>
-
-  <input type="text" v-model="text" />
-  <p>{{ text }}</p>
-
-  <CounterItem></CounterItem>
+  <h1>TodoList</h1>
   <h1>ToDO List</h1>
-
-  <div>
-    <button @click="showAdd = !showAdd">{{ showAdd ? 'Закрыть' : 'Добавить дело' }}</button>
-
-    <!-- <form action="" v-show="showAdd"></form> -->
-
-    <form v-if="showAdd" @submit.prevent="addTodo()">
-      <input type="text" placeholder="Введите дело" v-model="newToDO" />
-      <button>Создать</button>
-    </form>
-    <div v-else>
-      <p>Подсказка: нажмите кнопку</p>
-    </div>
-  </div>
-
-  <!-- <div v-for="todo in todos" v-bind:key="todo.id"></div> -->
+  <TodoAdd></TodoAdd>
+  <!-- <div v-for="todo in todos2" v-bind:key="todo.id"></div> -->
   <div
     class="todo-item"
     :class="{ 'todo-completed': todo.completed }"
-    v-for="todo in todos"
+    v-for="todo in todos2"
     :key="todo.id"
   >
     <p>{{ todo.id }}</p>
@@ -129,7 +84,6 @@ function saveToDO() {
     </div>
   </div>
 </template>
-
 <style scoped>
 h1 {
   color: red;

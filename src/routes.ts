@@ -5,7 +5,8 @@ import IndexPage from './pages/IndexPage.vue'
 import TodoPage from './pages/TodoPage.vue'
 import TestPage from './pages/TestPage.vue'
 import CurrencyConverterPage from './pages/CurrencyConverterPage.vue'
-import Kt1Page from './pages/Kt1Page.vue'
+import CartPage from './pages/CartPage.vue'
+import TodoSecondPage from './pages/TodoSecondPage.vue'
 
 const routes = [
   { path: '/', component: IndexPage },
@@ -30,8 +31,12 @@ const routes = [
     component: CurrencyConverterPage,
   },
   {
-    path: '/kt1',
-    component: Kt1Page,
+    path: '/cart',
+    component: CartPage,
+  },
+  {
+    path: '/todo2',
+    component: TodoSecondPage,
   },
 ]
 
